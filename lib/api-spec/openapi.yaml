@@ -1,15 +1,16 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: CipNime Anime API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: anime
+    description: Anime operations
 paths:
   /healthz:
     get:
@@ -24,6 +25,125 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /anime/ongoing:
+    get:
+      operationId: getOngoingAnime
+      tags: [anime]
+      summary: Get ongoing anime list
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: List of ongoing anime
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimeListResponse"
+
+  /anime/detail:
+    get:
+      operationId: getAnimeDetail
+      tags: [anime]
+      summary: Get anime detail by animeId
+      parameters:
+        - name: animeId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Anime detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimeDetailResponse"
+
+  /anime/episode:
+    get:
+      operationId: getEpisodeSources
+      tags: [anime]
+      summary: Get episode streaming sources
+      parameters:
+        - name: episodeId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Episode streaming sources
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EpisodeResponse"
+
+  /anime/search:
+    get:
+      operationId: searchAnime
+      tags: [anime]
+      summary: Search anime by query
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimeListResponse"
+
+  /anime/genres:
+    get:
+      operationId: getGenres
+      tags: [anime]
+      summary: Get all available genres
+      responses:
+        "200":
+          description: Genre list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenreListResponse"
+
+  /anime/genre:
+    get:
+      operationId: getAnimeByGenre
+      tags: [anime]
+      summary: Get anime by genre
+      parameters:
+        - name: genreId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Anime list by genre
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimeListResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +154,197 @@ components:
       required:
         - status
 
+    AnimeItem:
+      type: object
+      properties:
+        title:
+          type: string
+        poster:
+          type: string
+        episodes:
+          type: number
+          nullable: true
+        releaseDay:
+          type: string
+          nullable: true
+        latestReleaseDate:
+          type: string
+          nullable: true
+        animeId:
+          type: string
+        score:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+      required:
+        - title
+        - poster
+        - animeId
+
+    AnimeListResponse:
+      type: object
+      properties:
+        animeList:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnimeItem"
+        hasNextPage:
+          type: boolean
+        currentPage:
+          type: integer
+      required:
+        - animeList
+        - hasNextPage
+        - currentPage
+
+    GenreItem:
+      type: object
+      properties:
+        title:
+          type: string
+        genreId:
+          type: string
+        href:
+          type: string
+      required:
+        - title
+        - genreId
+
+    GenreListResponse:
+      type: object
+      properties:
+        genreList:
+          type: array
+          items:
+            $ref: "#/components/schemas/GenreItem"
+      required:
+        - genreList
+
+    EpisodeItem:
+      type: object
+      properties:
+        title:
+          type: string
+        eps:
+          type: number
+        date:
+          type: string
+          nullable: true
+        episodeId:
+          type: string
+        href:
+          type: string
+      required:
+        - title
+        - eps
+        - episodeId
+
+    AnimeDetailResponse:
+      type: object
+      properties:
+        title:
+          type: string
+        poster:
+          type: string
+        japanese:
+          type: string
+          nullable: true
+        score:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        episodes:
+          type: number
+          nullable: true
+        duration:
+          type: string
+          nullable: true
+        aired:
+          type: string
+          nullable: true
+        studios:
+          type: string
+          nullable: true
+        synopsis:
+          type: string
+          nullable: true
+        genreList:
+          type: array
+          items:
+            $ref: "#/components/schemas/GenreItem"
+        episodeList:
+          type: array
+          items:
+            $ref: "#/components/schemas/EpisodeItem"
+        batch:
+          nullable: true
+          type: string
+      required:
+        - title
+        - poster
+        - episodeList
+        - genreList
+
+    StreamSource:
+      type: object
+      properties:
+        server:
+          type: string
+        url:
+          type: string
+        quality:
+          type: string
+          nullable: true
+        isExternal:
+          type: boolean
+          nullable: true
+        type:
+          type: string
+          nullable: true
+      required:
+        - server
+        - url
+
+    DownloadLink:
+      type: object
+      properties:
+        server:
+          type: string
+        url:
+          type: string
+        quality:
+          type: string
+          nullable: true
+      required:
+        - server
+        - url
+
+    EpisodeResponse:
+      type: object
+      properties:
+        title:
+          type: string
+        episode:
+          type: string
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/StreamSource"
+        downloadLinks:
+          type: array
+          items:
+            $ref: "#/components/schemas/DownloadLink"
+      required:
+        - title
+        - episode
+        - sources

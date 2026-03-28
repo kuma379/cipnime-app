@@ -1,0 +1,15 @@
+packages:
+  "framer-motion": "For smooth page transitions and beautiful hover animations"
+  "clsx": "For conditional class names"
+  "tailwind-merge": "For merging tailwind classes safely"
+  "@radix-ui/react-slot": "For accessible component slots"
+
+images:
+  - path: "artifacts/cipnime/public/images/hero-bg.png"
+    description: "Dark, moody anime aesthetic background with deep purple and violet glowing neon lights, abstract cyber futuristic city vibes, high contrast, 4k"
+    aspect_ratio: "16:9"
+
+notes:
+  - Using generated hooks from @workspace/api-client-react
+  - Assuming routing uses wouter
+  - Implementing dark theme with purple/violet accents as requested

@@ -48,6 +48,16 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. The roo
 - `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
 - `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
 
+## Artifacts
+
+### `artifacts/cipnime` (`@workspace/cipnime`)
+
+CipNime - Nonton Anime Sub Indo streaming website. Dark-themed React + Vite app.
+
+- Pages: Home (ongoing grid), AnimeDetail, Watch (video player), Search
+- Uses axios via `/api/anime/*` routes to proxy data from `https://www.sankavollerei.com/anime/`
+- Routes: `/` (home), `/anime/:animeId`, `/watch/:episodeId`, `/search`
+
 ## Packages
 
 ### `artifacts/api-server` (`@workspace/api-server`)

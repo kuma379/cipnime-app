@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "CipNime - Nonton Anime Sub Indo"
+version = "1.0.0"
+id = "artifacts/cipnime"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 26258
+
+[services.development]
+run = "pnpm --filter @workspace/cipnime run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/cipnime", "run", "build" ]
+publicDir = "artifacts/cipnime/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26258"
+BASE_PATH = "/"
